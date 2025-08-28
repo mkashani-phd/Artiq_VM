@@ -34,6 +34,27 @@ To be done
 
 # Creating Portable VM with Artiq Enviornment
 
+After opening the VMware, Click on the Create a new Virtual Machine Icon and choose typical and Next.
+<p align="center">
+   <img src="img/Create_new_vm.png"> 
+</p>
+
+In the next window choose `use ISO image` option and using the browse button, choose the image file of the **Ubuntu 20.4** that you have downloaded and cliok Next. 
+
+<p align="center">
+   <img src="img/Iso_image.png"> 
+</p>
+
+Next make the name and possword as you like, but it is suggested to use `jrydberg`.
+
+
+<p align="center">
+   <img src="img/UserName_Pwd.png"> 
+</p>
+
+
+
+
 
 
 
