@@ -75,10 +75,14 @@ After finishing, the VMware is going to install the Ubuntu VM on your device. It
 
 ## Installing Vivado on VM
 
-First, on the VM Download the Vivado full offline installer (89GB) and unzip it. I have put the unziped folder on the cloud(TBD) which might be helpful. The navigate inside the folders to get to `xsetup`. In my case I have used the following command where the xilixn_installer is at `home` directory.
+First, on the VM Download the Vivado full offline installer (89GB) and unzip it. I have put the unziped folder on the cloud(TBD) which might be helpful. Install the dependencies, and then navigate inside the folders to get to `xsetup`. In my case I have used the following command where the xilixn_installer is at `home` directory.
 
 
 ```bash 
+sudo apt-get update
+sudo apt-get install -y libtinfo5 libncurses5 libxss1 libxtst6 libgtk-3-0 libcanberra-gtk-module libcanberra-gtk3-module libcurl4 libusb-1.0-0 build-essential
+```
+```bash
 cd xilinx-installer/Xilinx_Unified_2022.2_1014_8888/
 ```
 
@@ -105,9 +109,27 @@ CreateFileAssociation=1
 EnableDiskUsageOptimization=1
 ```
 
-Then use the following command to install Vivado.
+Then use the following command to install Vivado. Make sure that you are inside the xilinx installer where the `xsetup` exits.
 
 ```bash
+chmod 777 xsetup
+sudo ./xsetup \
+-a XilinxEULA,3rdPartyEULA \
+-b Install \
+-c install_config.txt
+```
+This installation might take a while (about 20 minutes +), be patient.
+
+After successfull installation you want to add Vivado to the path. 
+```bash
+ENV PATH="/opt/Xilinx/Vivado/2022.2/bin:${PATH}"
+```
+
+### NIX package manager installation
+Now we need to install NIX as this is the package manager that is used by Artiq. 
+
+
+
 
 
 
