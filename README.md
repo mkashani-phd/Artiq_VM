@@ -183,7 +183,7 @@ However this command have been added to the Vivado installation guide so you sho
 
 After a successful build, you should be able to find the `boot.bin` file in the `result` directory.
 
-Copy the `boot.bin` and the `CONFIG.TXT` to a SD card and insert to a kasli-soc. Note that this guide is for kasli-soc, so some changes might be needed.
+Copy the [CONFIG.TXT](./src/kasli_SD_card/boot.bin)  and the [CONFIG.TXT](./src/kasli_SD_card/CONFIG.TXT) to a SD card and insert to a kasli-soc. Note that this guide is for kasli-soc, so some changes might be needed.
 
 
 
