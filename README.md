@@ -118,15 +118,52 @@ sudo ./xsetup \
 -b Install \
 -c install_config.txt
 ```
-This installation might take a while (about 20 minutes +), be patient.
+This installation might take a while (about 20 minutes or more), be patient.
 
 After successfull installation you want to add Vivado to the path. 
 ```bash
-ENV PATH="/opt/Xilinx/Vivado/2022.2/bin:${PATH}"
+export PATH=/opt/Xilinx/Vivado/2022.2/bin:$PATH
+source ~/.bashrc
 ```
 
 ### NIX package manager installation
-Now we need to install NIX as this is the package manager that is used by Artiq. 
+Now we need to install NIX as this is the package manager that is used by Artiq. It will ask some question, say yes to all of them.
+
+``` bash
+sudo apt update
+sudo apt install -y curl git locales
+sh <(curl -L https://nixos.org/nix/install) --daemon
+export PATH=/nix/var/nix/profiles/default/bin:$PATH
+source ~/.bashrc
+mkdir -p ~/.config/nix
+echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+```
+
+### Installing Artiq
+
+To install Artq there are two ways. 
+- use the defult settings of the artiq (we use artiq 7 for now)
+   ```bash 
+   nix profile install git+https://github.com/m-labs/artiq.git\?ref=release-7
+   nix develop git+https://github.com/m-labs/artiq.git\?ref=release-7
+   ```
+- Or create your own custom enviornment by using the `flake.nix' file.
+   `to be done, sounds like necessary to build the entagler core`
+
+## congradulation
+At this point you should have a Virtual machin that has the Artiq ENV
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
