@@ -149,7 +149,7 @@ The most important command to test if Artq is installed is `artiq_master` which 
 At this point you should have a Virtual machin that has the Artiq ENV
 
 ### Testing the Gateware buil up
-To build a gateware you need to have a `.json` file that descirbes how each port of the Kasli is connected to each card. For example [kasli-soc-standalone](./src/Node%201/kasli-soc-standalone_node1_with_edgecounters_en.json) file can be used to generate the gateware, first go to the dierctory that has the nix enviornment setup. For example in my case I have used
+To build a gateware you need to have a `.json` file that descirbes how each port of the **Kasli-soc** is connected to each card. For example [kasli-soc-standalone](./src/Node%201/kasli-soc-standalone_node1_with_edgecounters_en.json) file can be used to generate the gateware, first go to the dierctory that has the nix enviornment setup. For example in my case I have used
 
 ```bash
 cd ~/Documents/Projects/Artiq_envs/defult
@@ -181,7 +181,9 @@ sudo chmod a+rx /etc/profile.d /etc/profile.d/vivado.sh
 ```
 However this command have been added to the Vivado installation guide so you should not get this problem.
 
-After successful build the boot.bin file is the `result` directory.
+After a successful build, you should be able to find the `boot.bin` file in the `result` directory.
+
+Copy the `boot.bin` and the `CONFIG.TXT` to a SD card and insert to a kasli-soc. Note that this guide is for kasli-soc, so some changes might be needed.
 
 
 
