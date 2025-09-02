@@ -201,6 +201,10 @@ nix develop
 
 remember that maybe the build requires the Xilinx 2024.2 but we have the 2022.2 I have ask chatGPT to just create and alias for the 2022.2 and rename it as 2024.2 to bypass the requirement and it worked.
 
+https://forum.m-labs.hk/d/363-how-do-i-get-gatewarefirmware-for-kasli-soc/7
+
+
+
 
 
 
