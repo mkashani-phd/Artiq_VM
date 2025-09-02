@@ -189,6 +189,22 @@ Copy the [CONFIG.TXT](./src/kasli_SD_card/boot.bin)  and the [CONFIG.TXT](./src/
 
 
 
+# Flashing Kasli-soc
+
+You must have vivado installed, and then clone the artiq-zynq repo then using the fowllowing 3 commands you can flash the kasli-soc.
+
+```bash
+nix build .#kasli_soc-demo-jtag
+nix develop
+./local_run.sh
+```
+
+remember that maybe the build requires the Xilinx 2024.2 but we have the 2022.2 I have ask chatGPT to just create and alias for the 2022.2 and rename it as 2024.2 to bypass the requirement and it worked.
+
+
+
+
+
 
 
 
