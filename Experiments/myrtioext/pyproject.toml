@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "myrtioext"
+version = "0.1.0"
+description = "Custom ARTIQ RTIO extension: OR two DIO inputs and drive an LED"
+readme = ""
+requires-python = ">=3.10"
+authors = [{ name = "Moh", email = "you@example.com" }]
+dependencies = []
+
+[tool.setuptools]
+packages = ["myrtioext", "myrtioext.gateware", "myrtioext.coredevice"]
