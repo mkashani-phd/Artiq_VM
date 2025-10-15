@@ -1,52 +1,54 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
-    artiq.url = "git+https://github.com/m-labs/artiq.git?ref=release-7";
-    extrapkg.url = "git+https://git.m-labs.hk/M-Labs/artiq-extrapkg.git?ref=release-7";
-    extrapkg.inputs.artiq.follows = "artiq";
+
+    # Upstream ARTIQ-Zynq (release-7)
+    artiq-zynq.url = "git+https://git.m-labs.hk/m-labs/artiq-zynq?ref=release-7";
+    artiq-zynq.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Your local myrtioext repo (adjust path)
+    myrtioext.url = "path:/home/jrydberg/Documents/Projects/Artiq_envs/defult/Artiq_VM/Experiments/myrtioext";
   };
 
-  outputs = { self, nixpkgs, artiq, extrapkg }:
+  outputs = { self, nixpkgs, artiq-zynq, myrtioext }:
   let
     system = "x86_64-linux";
-    pkgs = artiq.inputs.nixpkgs.legacyPackages.${system};
-    python = pkgs.python3;
+    pkgs = import nixpkgs { inherit system; };
 
-    # ARTIQ python packages from the ARTiq flake
-    artiqPkgs = artiq.packages.${system};
-    extraPkgs = extrapkg.packages.${system};
-
-    # Build your local Python package with setuptools/pyproject
-    myrtioext = pkgs.python3Packages.buildPythonPackage {
+    # Build your Python package (just the derivation; we’re not forcing it into upstream’s env yet)
+    myrtioextPkg = pkgs.python3Packages.buildPythonPackage {
       pname = "myrtioext";
       version = "0.1.0";
-      src = ./.;
+      src = myrtioext;
       format = "pyproject";
       nativeBuildInputs = with pkgs.python3Packages; [ setuptools wheel ];
       propagatedBuildInputs = [ ];
     };
 
-    # A Python environment that includes ARTIQ + your package
-    pyEnv = python.withPackages (ps: [
-      myrtioext
-      artiqPkgs.artiq
-      # optional extras (remove if you don't need them):
-      # artiqPkgs.artiq-full
-      # extraPkgs.artiq-examples
-    ]);
-  in {
-    # `nix build` will build your python package
-    packages.${system}.default = myrtioext;
+    # Choose target/variant/json (adjust to your JSON path)
+    target   = "kasli_soc";
+    variant  = "standalone";
+    jsonPath = /home/jrydberg/Documents/Projects/Artiq_envs/defult/kasli-soc-standalone_node1_with_edgecounters_en.json;
 
-    # `nix develop` gives you a shell with ARTIQ + your package on PYTHONPATH
+    # Call upstream helper and safely select the SD image attr (hyphenated)
+    pkgSet  = artiq-zynq.makeArtiqZynqPackage { inherit target variant; json = jsonPath; };
+    sdName  = "${target}-${variant}-sd";
+    sdImage = builtins.getAttr sdName pkgSet;
+  in {
+    # Build with: nix build .#sd --print-build-logs --impure
+    packages.${system}.sd = sdImage;
+
+    # (Optional) dev shell to sanity-check your myrtioext package builds & imports
     devShells.${system}.default = pkgs.mkShell {
-      packages = [
-        pyEnv
-        pkgs.git
-      ];
+      packages = [ pkgs.python3 myrtioextPkg ];
       shellHook = ''
-        echo "Dev shell ready. Python with ARTIQ + myrtioext is on PATH."
-        echo "Try: python -c 'import myrtioext, artiq; print(myrtioext.__version__)'"
+        echo "Dev shell: testing myrtioext import"
+        python - <<'PY'
+try:
+    import myrtioext; print("myrtioext OK:", myrtioext.__file__)
+except Exception as e:
+    print("Import failed:", e)
+PY
       '';
     };
   };

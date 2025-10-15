@@ -7,8 +7,8 @@ name = "myrtioext"
 version = "0.1.0"
 description = "Custom ARTIQ RTIO extension: OR two DIO inputs and drive an LED"
 readme = ""
-requires-python = ">=3.10"
-authors = [{ name = "Moh", email = "you@example.com" }]
+requires-python = ">=3.8"
+authors = [{ name = "Moh", email = "mkashani.phd@gmail.com" }]
 dependencies = []
 
 [tool.setuptools]
