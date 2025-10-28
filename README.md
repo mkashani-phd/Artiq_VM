@@ -205,6 +205,13 @@ https://forum.m-labs.hk/d/363-how-do-i-get-gatewarefirmware-for-kasli-soc/7
 
 
 
+# Building the entagnler core gateware (for Kasli for now)
+
+I have tried to build but it requires the artiq-full which can be found in the repo below
+https://git.m-labs.hk/drewrisinger/nix-scripts.git
+
+
+
 
 
 
