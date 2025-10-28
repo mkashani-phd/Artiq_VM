@@ -131,7 +131,7 @@ The directory that you run these commands will become the driectory for the envi
    ```bash 
    mkdir -p ~/Documents/Projects/Artiq_envs/defult/
    cd ~/Documents/Projects/Artiq_envs/defult/
-   nix profile install git+https://github.com/m-labs/artiq.git\?ref=release-7
+   nix profile add git+https://github.com/m-labs/artiq.git\?ref=release-7
    nix develop git+https://github.com/m-labs/artiq.git\?ref=release-7
    ```
 - Or create your own custom enviornment by using the `flake.nix' file.
