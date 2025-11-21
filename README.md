@@ -131,7 +131,7 @@ The directory that you run these commands will become the driectory for the envi
    ```bash 
    mkdir -p ~/Documents/Projects/Artiq_envs/defult/
    cd ~/Documents/Projects/Artiq_envs/defult/
-   nix profile install git+https://github.com/m-labs/artiq.git\?ref=release-7
+   nix profile add git+https://github.com/m-labs/artiq.git\?ref=release-7
    nix develop git+https://github.com/m-labs/artiq.git\?ref=release-7
    ```
 - Or create your own custom enviornment by using the `flake.nix' file.
@@ -184,6 +184,33 @@ However this command have been added to the Vivado installation guide so you sho
 After a successful build, you should be able to find the `boot.bin` file in the `result` directory.
 
 Copy the [CONFIG.TXT](./src/kasli_SD_card/boot.bin)  and the [CONFIG.TXT](./src/kasli_SD_card/CONFIG.TXT) to a SD card and insert to a kasli-soc. Note that this guide is for kasli-soc, so some changes might be needed.
+
+
+
+
+
+# Flashing Kasli-soc
+
+You must have vivado installed, and then clone the artiq-zynq repo then using the fowllowing 3 commands you can flash the kasli-soc.
+
+```bash
+nix build .#kasli_soc-demo-jtag
+nix develop
+./local_run.sh
+```
+
+remember that maybe the build requires the Xilinx 2024.2 but we have the 2022.2 I have ask chatGPT to just create and alias for the 2022.2 and rename it as 2024.2 to bypass the requirement and it worked.
+
+https://forum.m-labs.hk/d/363-how-do-i-get-gatewarefirmware-for-kasli-soc/7
+
+
+
+# Building the entagnler core gateware (for Kasli for now)
+
+I have tried to build but it requires the artiq-full which can be found in the repo below
+https://git.m-labs.hk/drewrisinger/nix-scripts.git
+
+
 
 
 
