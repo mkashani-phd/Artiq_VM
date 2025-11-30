@@ -1,3 +1,15 @@
+## to build the gateware run this command
+
+```bash
+nix build --print-build-logs --impure --expr '
+  let fl = builtins.getFlake "/home/jrydberg/Documents/Projects/Artiq_envs/defult/artiq-zynq";
+  in (fl.makeArtiqZynqPackage {
+    target = "kasli_soc";
+    variant = "standalone";              # or your variant
+    json = /home/jrydberg/Documents/Projects/Artiq_envs/defult/artiq-zynq/test.json;  # your entangler JSON
+  }).kasli_soc-standalone-sd'
+```
+
 # Guide to build/use Artiq Virtual Machine
 
 This document has instruction to download and build virutal machine that has Artiq enviornment. The goal is to have a portable virtual machine that can be shared with many computers to 
