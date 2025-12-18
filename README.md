@@ -138,6 +138,8 @@ echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 
 ### Installing Artiq
 
+### Old, Use MadMax Artiq for full compatibility
+
 The directory that you run these commands will become the driectory for the enviornment. I suggest creating a directory where you are more cofortable but my suggestion is to try to name it neatly so you can organize later. Overall, to install Artq there are two ways. 
 - use the defult settings of the artiq (we use artiq 7 for now). Make sure to say yes to the questions.
    ```bash 
