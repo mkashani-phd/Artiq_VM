@@ -133,8 +133,31 @@ sh <(curl -L https://nixos.org/nix/install) --daemon
 export PATH=/nix/var/nix/profiles/default/bin:$PATH
 source ~/.bashrc
 mkdir -p ~/.config/nix
-echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+
 ```
+
+and then modify the nix.conf file
+
+```bash 
+sudo nano /etc/nix/nix.conf
+``` 
+And append the following lines
+
+```bash
+experimental-features = nix-command flakes
+gc-keep-outputs = false
+gc-keep-derivations = false
+min-free = 5G
+max-free = 20G
+```
+and to make sure that the cache doesn't go out of control run the following
+
+```bash
+nix-collect-garbage --delete-older-than 7d
+```
+
+
+
 
 ### Installing Artiq
 
