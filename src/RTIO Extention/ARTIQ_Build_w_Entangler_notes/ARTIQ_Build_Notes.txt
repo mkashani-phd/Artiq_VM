@@ -1,0 +1,81 @@
+Building ARTIQ-7 (7.8161) with Entanlger-Core; Kasli 2.0, Ubuntu 20.04 LTS, Nix w/ flakes
+
+
+Initial setup
+• Install curl, git, and wget with apt
+• ARTIQ manual works to set up nix, flake.nix, and spawn shells
+
+
+Xilinx Vivado install:
+
+ARTIQ-7 -> Vivado 2022.2
+• Dependencies: libtinfo5 libncurses5 libstdc++6:i386 libgtk2.0-0:i386
+• From https://www.xilinx.com/support/download.html (need free account) download Xilinx_Unified_2021.1_0610_2318.tar.gz and place in /opt/XilinxFiles/Vivado/2022.2
+• Cleanup prior to any VM snapshots: $nix-collect-garbage -d$
+• Xilinx install for 2022.2
+	§ Enter folder with Xilinx tar and run $tar xvf Xilinx_Unified_2022.2_1014_8888.tar.gz$, make snapshot for incoming failures
+		
+	§ Enter install folder $cd /opt/XilinxFiles/Vivado/2022.2/Xilinx_Unified_2022.2_1014_8888$
+	§ $./xsetup -b AuthTokenGen$ and give login credentials
+	§ $./xsetup -b ConfigGen$ and choose 2 then 1 (Vivado ML Enterprise)
+		
+	§ Run setup $sudo ./xsetup --batch Install --agree XilinxEULA,3rdPartyEULA,WebTalkTerms  --location /opt/XilinxFiles/Vivado/2022.2 --config /home/$USER/.Xilinx/install_config.txt$
+		
+	§ ARTIQ expects Vivado in /opt: $sudo ln -s /opt/XilinxFiles/Vivado/2022.2/Vivado /opt/Xilinx$
+	§ Execute Vivado settings script $source /opt/Xilinx/Vivado/2022.2/settings64.sh$
+	§ vivado -help returns info
+
+
+Building and flashing ARTIQ:
+
+• Need to configure a json mapping EEMs for your crate, example attached. This will be modified to include the entangler.
+	• json in some working directory /your_env/ with a flake.nix
+
+• From inside working directory, enter dev shell $nix develop git+https://github.com/m-labs/artiq.git\?ref=release-7$ takes about 10 mins
+• Build ARTIQ $python -m artiq.gateware.targets.kasli_generic your_crate_name.json$
+• Flash crate with $artiq_flash --srcbuild -d artiq_kasli/your_crate_name$; build process makes this directory using json name
+• Generate device_db from json $artiq_ddb_template your_crate_name.json > device_db.py$
+
+
+Building and flashing with entangler: (recommend https://gitlab.com/duke-artiq/entangler-core/-/blob/master/entangler/README.md?ref_type=heads)
+
+• Some modifications to flake.nix were necessary; the flake.nix used in the build/working directory differs from the one in the environment directory where you start the master etc.
+	• Included two flake.nix; (build)flake used for build process and may need changes/trial and error for working with your system
+	• e.g. following successful build and flash, if scripts fail to run with error "LoadError: cannot load kernel: symbol lookup error: __artiq_personality" 
+	  then your LLVM version may need to be changed. For ARTIQ 6 use version 14, for 7 use verion 11.
+• Build directory needs entangler core cloned into it, I used https://gitlab.com/duke-artiq/entangler-core.git
+• Change settings.toml for your needs prior to attempting build. We use 8 output (all channels on EEM1), 4 entangler input, 4 generic input (all channels on EEM2)
+• Modify json accordingly; see ours. Our build has 4 SMA-DIO cards in EEM 1-4; entangler claims the first two
+
+• Enter nix shell with build flake; will take longer this time
+• Try building: $python -m entangler.kasli_generic /build_directory/your_crate_name.json$ this takes ~40 mins
+	• Pay close attention to the start of the build process. It will list the EEM assignments and you should try to copy this section as it may help later in
+	  making the device_db addresses consistent with the build, assuming you don't find a way to automate that (see below; I did not)
+		Example:
+			Grabber (EEM0) starting at RTIO channel 0x000000
+			EntanglerEEM (EEM[1, 2]) starting at RTIO channel 0x000002
+			INFO:__main__:RTIO Channels 2 -> 9 configured as Outputs
+			INFO:__main__:RTIO Channels 10 -> 17 configured as Inputs (first 4 entangle-able)
+			WARNING:entangler.core:No inter-Entangler pads provided. Not enabling inter-Kasli communication
+			INFO:__main__:Added Entangler PHY on channel 18
+			DIO (EEM3) starting at RTIO channel 0x000013
+			DIO (EEM4) starting at RTIO channel 0x00001b
+			Urukul (EEM5) starting at RTIO channel 0x000023
+			Urukul (EEM7) starting at RTIO channel 0x00002a
+			Urukul (EEM9) starting at RTIO channel 0x000031
+			Zotino (EEM11) starting at RTIO channel 0x000038
+			USER LED at RTIO channel 0x00003b
+			USER LED at RTIO channel 0x00003c
+• Flash like usual $artiq_flash --srcbuild -d /build_directory/artiq_kasli/your_crate_name$
+
+• For the device_db, I had to generate and modify a generic one from a generic json (in json, switch entangler EEM back to DIO). Our working device_db is included.
+	• $artiq_ddb_template your_crate_name_generic.json > device_db.py$
+	• Then go through and add the entangler peripherals.
+		• Pay careful attention to the channel values; the entangler offsets these by one for the entire device_db following its peripherals. 
+		  This is where the EEM assignments from the start of the build process can be useful.
+
+
+Using the entangler:
+• basic_experiment.py in the cloned entangler repo works well to demonstrate its use and should simply run. I've been working on a basic package-like structure for our ARTIQ system so the fast loop pulse sequence 
+  and runtime are specified by a json which is read into the entangler's set_timing_mu() format, so its import in my example may look a bit odd. Otherwise, the run section of the included entangler_service_testing.py has all 
+  the ingredients and sufficient RTIOUnderflow handling to run the flast loop ~endlessly while tracking the total cycles which have run.
