@@ -139,18 +139,17 @@ mkdir -p ~/.config/nix
 
 and then modify the nix.conf file
 
-```bash 
-sudo nano /etc/nix/nix.conf
-``` 
-And append the following lines
-
 ```bash
+
+cat > ~/.config/nix/nix.conf <<'EOF'
 experimental-features = nix-command flakes
 gc-keep-outputs = false
 gc-keep-derivations = false
 min-free = 5G
 max-free = 20G
+EOF
 ```
+
 and to make sure that the cache doesn't go out of control run the following
 
 ```bash
