@@ -1,0 +1,60 @@
+{
+    "target": "kasli",
+    "min_artiq_version": "7.0",
+    "variant": "artiq-7-master-entangler-jan2024",
+    "hw_rev": "v2.0",
+    "base": "standalone",
+    "core_addr": "192.168.1.75",
+    "rtio_frequency": 125e6,
+    "peripherals": [
+        {
+            "type": "grabber",
+            "ports": [0]
+        },
+        {
+            "type": "entangler",
+            "ports": [1, 2],
+            "running_output": false,
+            "uses_reference": false
+        },
+        {
+            "type": "dio",
+            "board": "DIO_SMA",
+            "ports": [3],
+            "bank_direction_low": "output",
+            "bank_direction_high": "output"
+        },
+        {
+            "type": "dio",
+            "board": "DIO_SMA",
+            "ports": [4],
+            "bank_direction_low": "output",
+            "bank_direction_high": "output"
+        },
+        {
+            "type": "urukul",
+            "dds": "ad9910",
+            "ports": [5, 6],
+            "clk_sel": 2,
+            "synchronization": true
+        },
+        {
+            "type": "urukul",
+            "dds": "ad9910",
+            "ports": [7, 8],
+            "clk_sel": 2,
+            "synchronization": true
+        },
+        {
+            "type": "urukul",
+            "dds": "ad9910",
+            "ports": [9, 10],
+            "clk_sel": 2,
+            "synchronization": true
+        },
+        {
+            "type": "zotino",
+            "ports": [11]
+        }
+    ]
+}

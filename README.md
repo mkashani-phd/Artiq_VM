@@ -6,10 +6,11 @@ This document has instruction to download and build virutal machine that has Art
 
 
 
-# VMware Intallation Guide
+# VMware Intallation and creation Guide
+Using the VMware that is already made is relatively easier than creating a VM ware. the guid below shows how to create a vmware rather than how to load and use a already made VMware.
 
 ## Windows
-to be done
+to be done 
 ## MAC
 to be done
 
@@ -155,6 +156,7 @@ To build a gateware you need to have a `.json` file that descirbes how each port
 cd ~/Documents/Projects/Artiq_envs/defult
 ```
 
+
 Copy and paste the `.json` configuration file and usie the following command. (just make sure to use absolute path to the 'json' file in the command below)
 
 ```bash
@@ -191,7 +193,7 @@ Copy the [CONFIG.TXT](./src/kasli_SD_card/boot.bin)  and the [CONFIG.TXT](./src/
 
 # Flashing Kasli-soc
 
-You must have vivado installed, and then clone the artiq-zynq repo then using the fowllowing 3 commands you can flash the kasli-soc.
+You must have vivado installed, and then clone the **artiq-zynq** repo then using the fowllowing 3 commands you can flash the kasli-soc.
 
 ```bash
 nix build .#kasli_soc-demo-jtag
