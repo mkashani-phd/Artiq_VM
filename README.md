@@ -1,3 +1,15 @@
+## to build the gateware run this command
+
+```bash
+nix build --print-build-logs --impure --expr '
+  let fl = builtins.getFlake "/home/jrydberg/Documents/Projects/Artiq_envs/defult/artiq-zynq";
+  in (fl.makeArtiqZynqPackage {
+    target = "kasli_soc";
+    variant = "standalone";              # or your variant
+    json = /home/jrydberg/Documents/Projects/Artiq_envs/defult/artiq-zynq/test.json;  # your entangler JSON
+  }).kasli_soc-standalone-sd'
+```
+
 # Guide to build/use Artiq Virtual Machine
 
 This document has instruction to download and build virutal machine that has Artiq enviornment. The goal is to have a portable virtual machine that can be shared with many computers to 
@@ -127,12 +139,14 @@ echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 
 ### Installing Artiq
 
+### Old, Use MadMax Artiq for full compatibility
+
 The directory that you run these commands will become the driectory for the enviornment. I suggest creating a directory where you are more cofortable but my suggestion is to try to name it neatly so you can organize later. Overall, to install Artq there are two ways. 
 - use the defult settings of the artiq (we use artiq 7 for now). Make sure to say yes to the questions.
    ```bash 
    mkdir -p ~/Documents/Projects/Artiq_envs/defult/
    cd ~/Documents/Projects/Artiq_envs/defult/
-   nix profile install git+https://github.com/m-labs/artiq.git\?ref=release-7
+   nix profile add git+https://github.com/m-labs/artiq.git\?ref=release-7
    nix develop git+https://github.com/m-labs/artiq.git\?ref=release-7
    ```
 - Or create your own custom enviornment by using the `flake.nix' file.
@@ -204,6 +218,13 @@ nix develop
 remember that maybe the build requires the Xilinx 2024.2 but we have the 2022.2 I have ask chatGPT to just create and alias for the 2022.2 and rename it as 2024.2 to bypass the requirement and it worked.
 
 https://forum.m-labs.hk/d/363-how-do-i-get-gatewarefirmware-for-kasli-soc/7
+
+
+
+# Building the entagnler core gateware (for Kasli for now)
+
+I have tried to build but it requires the artiq-full which can be found in the repo below
+https://git.m-labs.hk/drewrisinger/nix-scripts.git
 
 
 
